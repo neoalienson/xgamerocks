@@ -10,7 +10,7 @@ Prerequesties
 
 Usage
 =====
-    scapper.py \<url\>
+    scapper.py <url>
 
 Using with docker
 =====
