@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { 
   ActivityIndicator,
   ListView,
@@ -11,9 +11,10 @@ var VideoList = require('./VideoList');
 
 var API_URL = 'https://neo.works:8443/parse/classes/Video';
 
-class VideosView extends Component {
-  constructor(props) {
-    super(props);
+export default class VideosView extends Component {
+
+  constructor(props, context) {
+    super(props, context);
     this.state = {
       isLoading: false,
       dataSource: new ListView.DataSource({
@@ -84,8 +85,8 @@ class VideosView extends Component {
 var styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 20,
     backgroundColor: 'white',
-    marginTop: 80,
   },
   centerText: {
     alignItems: 'center',
@@ -95,4 +96,4 @@ var styles = StyleSheet.create({
   },
 });
 
-module.exports = VideosView;
+//module.exports = VideosView;
