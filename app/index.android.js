@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { AppRegistry } from 'react-native';
 
-var VideoList = require('./VideoList');
+import VideoList from './VideoList';
 
 class xgamerocks extends Component {
   render() {

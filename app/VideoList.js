@@ -38,7 +38,7 @@ let styles = StyleSheet.create({
 });
 
 
-class VideoList extends Component {
+export default class VideoList extends Component {
   getChildStyle(row) {
     var _height = 220;
     _height += (row.description.length == 0) ? 0 : 55;
@@ -92,4 +92,3 @@ class VideoList extends Component {
   }
 }
 
-module.exports = VideoList;

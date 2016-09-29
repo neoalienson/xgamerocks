@@ -57,10 +57,12 @@ export default class VideosView extends Component {
         });
       })
       .then((responseData) => {
-        this.setState({
-          isLoading: false,
-          dataSource: this.getDataSource(responseData.results),
-        });
+        if (responseData != undefined) {
+          this.setState({
+            isLoading: false,
+            dataSource: this.getDataSource(responseData.results),
+          });
+        }
       })
       .done();
   }
@@ -96,4 +98,3 @@ var styles = StyleSheet.create({
   },
 });
 
-//module.exports = VideosView;
