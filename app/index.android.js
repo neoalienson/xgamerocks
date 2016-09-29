@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { AppRegistry } from 'react-native';
 
-import VideosView from './VideoList';
+import VideosView from './VideosView';
 
 class xgamerocks extends Component {
   render() {
     return (
-      <VideosView
-        style={{flex: 1}}
-      />
+      <VideosView />
     );
   }
 }
