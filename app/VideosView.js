@@ -7,7 +7,7 @@ import {
   View,
  } from 'react-native';
 
-var VideoList = require('./VideoList');
+import VideoList from './VideoList';
 
 var API_URL = 'https://neo.works:8443/parse/classes/Video';
 
