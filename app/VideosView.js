@@ -82,7 +82,7 @@ export default class VideosView extends Component {
     }
     return (this.state.dataSource.getRowCount() === 0 ?
       <View style={[styles.container, styles.centerText]}>
-        <Text style={styles.loadingText}>Loading</Text>
+        <ActivityIndicator style={{flex:1}} />
       </View> : 
       <View style={styles.container}>
         <VideoList dataSource={this.state.dataSource}/>
@@ -100,9 +100,6 @@ var styles = StyleSheet.create({
   },
   centerText: {
     alignItems: 'center',
-  },
-  loadingText: {
-    color: '#888888',
   },
 });
 
