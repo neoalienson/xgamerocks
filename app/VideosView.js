@@ -20,7 +20,6 @@ export default class VideosView extends Component {
       dataSource: new ListView.DataSource({
         rowHasChanged: (row1, row2) => row1 !== row2,
       }),
-      queryNumber: 0,
       loadError: null,
     };
   }
@@ -36,7 +35,6 @@ export default class VideosView extends Component {
   }
 
   loadVideos() {
-    this.timeoutID = null;
     this.loadError = null;
 
     if (this.props.isLoading) {
