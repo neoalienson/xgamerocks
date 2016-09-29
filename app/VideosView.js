@@ -20,7 +20,8 @@ export default class VideosView extends Component {
       dataSource: new ListView.DataSource({
         rowHasChanged: (row1, row2) => row1 !== row2,
       }),
-      queryNumber: 0
+      queryNumber: 0,
+      loadError: null,
     };
   }
   
@@ -36,6 +37,7 @@ export default class VideosView extends Component {
 
   loadVideos() {
     this.timeoutID = null;
+    this.loadError = null;
 
     if (this.props.isLoading) {
       return;
@@ -46,14 +48,15 @@ export default class VideosView extends Component {
         method: 'GET',
         headers: {
           'X-Parse-Application-Id' : 'xgamerocks',
-          'X-Parse-REST-API-Key' : undefined,
+          'X-Parse-REST-API-Key' : null,
         }
       })
       .then((response) => response.json())
       .catch((error) => {
         this.setState({ 
           dataSource: this.getDataSource([]),
-          isLoading: false 
+          isLoading: false,
+          loadError: error,
         });
       })
       .then((responseData) => {
@@ -72,6 +75,13 @@ export default class VideosView extends Component {
   }
   
   render() {
+    if (this.state.loadError != null) {
+      return (
+        <View style={[styles.container, styles.centerText]}>
+          <Text>Network error</Text>
+        </View>
+      );
+    }
     return (this.state.dataSource.getRowCount() === 0 ?
       <View style={[styles.container, styles.centerText]}>
         <Text style={styles.loadingText}>Loading</Text>
