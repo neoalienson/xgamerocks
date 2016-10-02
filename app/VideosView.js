@@ -95,8 +95,7 @@ export default class VideosView extends Component {
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#3b5998',
   },
   centerText: {
     alignItems: 'center',

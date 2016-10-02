@@ -16,24 +16,27 @@ const CELL_PADDING = 6;
 
 let styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
-    padding: 4,
+    backgroundColor: '#3b5998',
+    marginLeft: CELL_PADDING,
+    flex: 1,
   },
   textTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#000000',
-    marginTop: 10,
+    marginTop: 4,
+    padding: CELL_PADDING,
   },
   textDesc: {
     fontSize: 12,
     color: '#777777',
-    marginTop: 4,
+    padding: CELL_PADDING,
   },
   // 4:3 ration for video thumb
   thumb: {
-    width: CELL_WIDTH - CELL_PADDING * 2,
+    width: CELL_WIDTH,
     height: (CELL_WIDTH - CELL_PADDING * 2) * 3 / 4,
+    backgroundColor: 'black',
   },
 });
 
@@ -47,8 +50,7 @@ export default class VideoList extends Component {
       height: _height,
       width: CELL_WIDTH,
       backgroundColor: '#FFFFEE',
-      padding: CELL_PADDING,
-      borderRadius: 4,
+      marginTop: CELL_PADDING,
     };
   }
   
@@ -83,7 +85,7 @@ export default class VideoList extends Component {
 
   render() {
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView style={ styles.container }>
         <AutoResponisve {...this.getAutoResponsiveProps()}>
           {this.renderChildren()}
         </AutoResponisve>
