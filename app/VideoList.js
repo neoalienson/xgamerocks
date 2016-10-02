@@ -1,24 +1,126 @@
-import React, { Component } from 'react';
+import React, { Component, 
+  PropTypes } from 'react';
 import { 
-  Image, 
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  ListView,
+  ScrollView,
   StyleSheet,
   Text,
   View,
-  ScrollView,
-  Dimensions
  } from 'react-native';
-import AutoResponisve from 'autoresponsive-react-native';
-import ListViewDataSource from 'ListViewDataSource';
 
+var API_URL = 'https://neo.works:8443/parse/classes/Video';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const CELL_WIDTH = (SCREEN_WIDTH - 18) / 2;
 const CELL_PADDING = 6;
 
-let styles = StyleSheet.create({
+
+export default class VideosView extends Component {
+
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      isLoading: false,
+      dataSource: new ListView.DataSource({
+        rowHasChanged: (row1, row2) => row1 !== row2,
+      }),
+      loadError: null,
+    };
+  }
+  
+  componentDidMount() {
+    this.loadVideos('');
+  }
+  
+  _urlForPage(pageNumber: number): string {
+    return (
+      API_URL
+    );
+  }
+
+  loadVideos() {
+    this.loadError = null;
+
+    if (this.props.isLoading) {
+      return;
+    }
+    
+    this.setState({ isLoading: true });
+    fetch(this._urlForPage(1), {
+        method: 'GET',
+        headers: {
+          'X-Parse-Application-Id' : 'xgamerocks',
+          'X-Parse-REST-API-Key' : null,
+        }
+      })
+      .then((response) => response.json())
+      .catch((error) => {
+        this.setState({ 
+          dataSource: this.getDataSource([]),
+          isLoading: false,
+          loadError: error,
+        });
+      })
+      .then((responseData) => {
+        if (responseData != undefined) {
+          this.setState({
+            isLoading: false,
+            dataSource: this.getDataSource(responseData.results),
+          });
+        }
+      })
+      .done();
+  }
+
+  getDataSource(videos: Array<any>): ListView.DataSource {
+    return this.state.dataSource.cloneWithRows(videos);
+  }
+  
+  _renderRow(row, sectionID: number, rowID: number) {
+    return (
+        <View>
+          <View style={styles.row} key={rowID}>
+            <Image source={{uri: row.thumbUrl}} style={styles.thumb}></Image>
+            <Text style={styles.textTitle} ellipsizeMode="tail" numberOfLines={3} >{row.title}</Text>
+            <Text style={styles.textDesc} ellipsizeMode="tail" numberOfLines={3}>{row.description}</Text>
+          </View>
+        </View>
+    );
+  }
+  
+  render() {
+    if (this.state.loadError != null) {
+      return (
+        <View style={[styles.container, styles.centerText]}>
+          <Text>Network error</Text>
+        </View>
+      );
+    }
+    return (this.state.dataSource.getRowCount() === 0 ?
+      <View style={[styles.container, styles.centerText]}>
+        <ActivityIndicator style={{flex:1}} />
+      </View> : 
+      <ListView
+        contentContainerStyle={styles.list}
+        dataSource={this.state.dataSource}
+        renderRow={this._renderRow}
+        renderScrollComponent={props => <ScrollView {...props} 
+          style={{ backgroundColor:"#3b5998" }} />}
+      />
+    );
+  }
+  
+}
+
+var styles = StyleSheet.create({
   container: {
-    backgroundColor: '#3b5998',
-    marginLeft: CELL_PADDING,
     flex: 1,
+    backgroundColor: '#3b5998',
+  },
+  centerText: {
+    alignItems: 'center',
   },
   textTitle: {
     fontSize: 16,
@@ -38,59 +140,17 @@ let styles = StyleSheet.create({
     height: (CELL_WIDTH - CELL_PADDING * 2) * 3 / 4,
     backgroundColor: 'black',
   },
+  row: {
+    width: CELL_WIDTH,
+    backgroundColor: 'white',
+    marginTop: 8,
+  },
+  list: {
+    justifyContent: 'space-around',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+    backgroundColor: '#3b5998',
+  },  
 });
-
-
-export default class VideoList extends Component {
-  getChildStyle(row) {
-    var _height = 220;
-    _height += (row.description.length == 0) ? 0 : 55;
-    console.log(_height);
-    return {
-      height: _height,
-      width: CELL_WIDTH,
-      backgroundColor: '#FFFFEE',
-      marginTop: CELL_PADDING,
-    };
-  }
-  
-  getAutoResponsiveProps() {
-    return {
-      itemMargin: 8,
-    };
-  }
-
-  renderChildren() {
-    var ds = this.props.dataSource;
-    var data = Array();
-    
-    for (i =0; i < ds.getRowCount(); i++) {
-      var row = ds.getRowData(0, i);
-      data.push(
-          <View style={this.getChildStyle(row)} 
-            key={i}>
-            <Image source={{uri: row.thumbUrl}}
-            style={styles.thumb}></Image>
-            <Text style={styles.textTitle}
-              ellipsizeMode="tail" numberOfLines={3}
-            >{row.title}</Text>
-            <Text style={styles.textDesc}
-              ellipsizeMode="tail" numberOfLines={3}
-            >{row.description}</Text>
-          </View>
-      );
-    }
-    return data;
-  }
-
-  render() {
-    return (
-      <ScrollView style={ styles.container }>
-        <AutoResponisve {...this.getAutoResponsiveProps()}>
-          {this.renderChildren()}
-        </AutoResponisve>
-      </ScrollView>
-    );
-  }
-}
 

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { AppRegistry, View } from 'react-native';
-import VideosView from './VideosView';
+import VideoList from './VideoList';
 
 class xgamerocks extends Component {
   render() {
     return (
       <View style={{ marginTop: 20, flex: 1 }} >
-        <VideosView  />
+        <VideoList  />
       </View>
     );
   }
