@@ -11,7 +11,7 @@ import {
   View,
  } from 'react-native';
 
-var API_URL = 'https://neo.works:8443/parse/classes/Video';
+var API_URL = 'https://neo.works:8445/video';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const CELL_WIDTH = (SCREEN_WIDTH - 18) / 2;
 const CELL_PADDING = 6;
