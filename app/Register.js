@@ -3,6 +3,7 @@ import React, { Component,
 import { 
   ActivityIndicator,
   Alert,
+  Animated,
   Dimensions,
   Image,
   KeyboardAvoidingView,
@@ -23,18 +24,22 @@ export default class VideosView extends Component {
     
     this.state = {
       videoLoaded: false,
+      opacity: new Animated.Value(0),
     }
   }
   
   render() {
     return (
-      <View style={ [ styles.container, { alignItems: 'center', } ]} >
+      <Animated.View style={ [ styles.container, { alignItems: 'center', opacity: this.state.opacity } ]} >
         <Video 
           repeat
           muted={ true }
           paused={ true }
           resizeMode="cover"
-          style={ styles.backgroundVideo }
+          onLoad={ () => {
+            Animated.timing(this.state.opacity, {toValue: 1}).start();
+          } }
+          style={ [ styles.background,  ]}
           source={ require('./assets/video/lighthouse_p.mp4') } />
         <KeyboardAvoidingView behavior="position" >
           <View style={ styles.formView }>
@@ -54,14 +59,14 @@ export default class VideosView extends Component {
           </TouchableHighlight>
         </View>
         </KeyboardAvoidingView>
-      </View>
+      </Animated.View>
     );
   }
   
 }
 
 var styles = StyleSheet.create({
-  backgroundVideo: {
+  background: {
     position: 'absolute',
     top: 0,
     left: 0,
