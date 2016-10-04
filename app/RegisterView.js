@@ -18,6 +18,7 @@ import {
 import Video from 'react-native-video';
 import Styles from './Styles';
 import { Button } from 'react-native-elements';
+import CountryPicker from 'react-native-country-picker-modal';
   
 export default class RegisterView extends Component {
 
@@ -27,6 +28,8 @@ export default class RegisterView extends Component {
     this.state = {
       videoLoaded: false,
       opacity: new Animated.Value(0),
+      cca2: 'HK',
+      country: 'Hong Kong',
     }
   }
   
@@ -46,6 +49,19 @@ export default class RegisterView extends Component {
         <KeyboardAvoidingView behavior="position" >
           <View style={ Styles.formView }>
           <Text style={ Styles.textHero } >Welcome to XGameROCKS!</Text>
+          <View style={{ marginTop: 40, flexDirection: 'row'}}>
+          <CountryPicker 
+            onChange={(value)=> this.setState({country: value, cca2: value.cca2})}
+            cca2={this.state.cca2}
+            translation='eng'
+            style={{ backgroundColor: 'transparent' }}
+          />
+          {this.state.country &&
+            <Text style={ Styles.text }>
+              { this.state.country.name }
+            </Text>
+          }
+          </View>
           <TextInput style={ [ Styles.textInput ] }
             keyboardType="numeric"
             placeholder="8888888"

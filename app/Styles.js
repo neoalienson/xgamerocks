@@ -17,6 +17,13 @@ export default StyleSheet.create({
   formView: {
     width: 300,
   },
+  text: { 
+    backgroundColor: 'transparent',
+    color: 'black',
+    marginTop : 10,
+    marginBottom: 20,
+    fontSize : 24,
+  },
   textHero: { 
     backgroundColor: 'transparent',
     color: 'white',
@@ -38,7 +45,7 @@ export default StyleSheet.create({
     height: 50,
     flex: 1,
     fontSize: 35,
-    marginTop: 40,
+    marginTop: 20,
     padding: 10,
     textAlign: 'center',
   },
