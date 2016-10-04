@@ -112,5 +112,6 @@ var styles = StyleSheet.create({
     fontSize: 40,
     marginTop: 40,
     padding: 10,
+    textAlign: 'center',
   },
 });
