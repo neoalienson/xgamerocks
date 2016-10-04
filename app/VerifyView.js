@@ -51,17 +51,7 @@ export default class Verify extends Component {
             placeholder="0000000"
           />
           <Text style={ Styles.textInfo } >Please enter verification code from SMS</Text>
-          <TouchableOpacity 
-            disabled={ this.state.codeValid }
-            color={ this.state.codeValid ? 'white' : 'grey' }
-            onPress={() => Alert.alert(
-               'Alert Title',
-               'Alert',
-               [ {text: 'OK' } ]
-              )
-            }>
-            <Text style={ Styles.button } >Verify</Text>
-          </TouchableOpacity>
+          <Button raised backgroundColor="#397af8" icon={{ name: 'done' }} title='VERIFY' />
         </View>
         </KeyboardAvoidingView>
       </Animated.View>

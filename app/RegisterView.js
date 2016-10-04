@@ -17,7 +17,8 @@ import {
  } from 'react-native';
 import Video from 'react-native-video';
 import Styles from './Styles';
-
+import { Button } from 'react-native-elements';
+  
 export default class RegisterView extends Component {
 
   constructor(props, context) {
@@ -45,19 +46,12 @@ export default class RegisterView extends Component {
         <KeyboardAvoidingView behavior="position" >
           <View style={ Styles.formView }>
           <Text style={ Styles.textHero } >Welcome to XGameROCKS!</Text>
-          <TextInput style={ Styles.textInput }
-            keyboardType="phone-pad"
-            placeholder="8528888888"
+          <TextInput style={ [ Styles.textInput ] }
+            keyboardType="numeric"
+            placeholder="8888888"
           />
           <Text style={ Styles.textInfo } >Enter your phone numbers above to verify</Text>
-          <TouchableHighlight onPress={() => Alert.alert(
-               'Alert Title',
-               'Alert',
-               [ {text: 'OK' } ]
-              )
-            }>
-            <Text style={ Styles.button } >Verify</Text>
-          </TouchableHighlight>
+          <Button raised backgroundColor="#397af8" icon={{ name: 'done' }} title='VERIFY' />
         </View>
         </KeyboardAvoidingView>
       </Animated.View>
