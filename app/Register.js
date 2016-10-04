@@ -18,8 +18,12 @@ import Video from 'react-native-video';
 
 export default class VideosView extends Component {
 
-  this.state = {
-    videoLoaded: false,
+  constructor(props, context) {
+    super(props, context);
+    
+    this.state = {
+      videoLoaded: false,
+    }
   }
   
   render() {
@@ -37,8 +41,9 @@ export default class VideosView extends Component {
           <Text style={ styles.textHero } >Welcome to XGameROCKS!</Text>
           <TextInput style={ styles.textInput }
             keyboardType="phone-pad"
-            placeholder="Enter your phone numbers to verify"
+            placeholder="8528888888"
           />
+          <Text style={ styles.textInfo } >Enter your phone numbers above to verify</Text>
           <TouchableHighlight onPress={() => Alert.alert(
                'Alert Title',
                'Alert',
@@ -68,6 +73,7 @@ var styles = StyleSheet.create({
     color: 'white',
     fontSize: 25,
     marginTop: 40,
+    marginBottom: 40,
     padding: 10,
     textAlign: 'center',
   },
@@ -89,9 +95,16 @@ var styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 } ,
     textShadowRadius: 2,    
   },
+  textInfo: { 
+    backgroundColor: 'transparent',
+    color: 'grey',
+    marginTop : 10,
+    fontSize : 16,
+  },
   textInput: { 
     backgroundColor: 'white',
-    height: 40,
+    height: 60,
+    fontSize: 40,
     marginTop: 40,
     padding: 10,
   },
