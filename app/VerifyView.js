@@ -16,6 +16,7 @@ import {
   View,
  } from 'react-native';
 import Video from 'react-native-video';
+import Styles from './Styles';
 
 export default class Verify extends Component {
 
@@ -31,7 +32,7 @@ export default class Verify extends Component {
   
   render() {
     return (
-      <Animated.View style={ [ styles.container, { alignItems: 'center', opacity: this.state.opacity } ]} >
+      <Animated.View style={ [ Styles.container, { alignItems: 'center', opacity: this.state.opacity } ]} >
         <Video 
           repeat
           muted={ true }
@@ -40,16 +41,16 @@ export default class Verify extends Component {
           onLoad={ () => {
             Animated.timing(this.state.opacity, {toValue: 1}).start();
           } }
-          style={ [ styles.background,  ]}
+          style={ [ Styles.background,  ]}
           source={ require('./assets/video/lighthouse_p.mp4') } />
         <KeyboardAvoidingView behavior="position" >
-          <View style={ styles.formView }>
-          <Text style={ styles.textHero } >SMS Verification</Text>
-          <TextInput style={ [ styles.textInput, { flex: 1 } ]}
+          <View style={ Styles.formView }>
+          <Text style={ Styles.textHero } >SMS Verification</Text>
+          <TextInput style={ [ Styles.textInput, { flex: 1 } ]}
             keyboardType="numeric"
             placeholder="0000000"
           />
-          <Text style={ styles.textInfo } >Please enter verification code from SMS</Text>
+          <Text style={ Styles.textInfo } >Please enter verification code from SMS</Text>
           <TouchableOpacity 
             disabled={ this.state.codeValid }
             color={ this.state.codeValid ? 'white' : 'grey' }
@@ -59,7 +60,7 @@ export default class Verify extends Component {
                [ {text: 'OK' } ]
               )
             }>
-            <Text style={ styles.button } >Verify</Text>
+            <Text style={ Styles.button } >Verify</Text>
           </TouchableOpacity>
         </View>
         </KeyboardAvoidingView>
@@ -70,59 +71,4 @@ export default class Verify extends Component {
 }
 
 var styles = StyleSheet.create({
-  background: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-  },
-  button: {
-    backgroundColor: '#3b5998',
-    fontSize: 25,
-    marginTop: 40,
-    marginBottom: 40,
-    padding: 10,
-    textAlign: 'center',
-  },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'black',
-  },
-  formView: {
-    width: 300,
-  },
-  textHero: { 
-    backgroundColor: 'transparent',
-    color: 'white',
-    fontWeight : '800',
-    fontSize : 40,
-    textShadowColor: 'grey',
-    textShadowOffset: { width: 1, height: 1 } ,
-    textShadowRadius: 2,    
-  },
-  textInfo: { 
-    backgroundColor: 'transparent',
-    color: 'grey',
-    marginTop : 10,
-    fontSize : 16,
-  },
-  textInput: { 
-    backgroundColor: 'white',
-    height: 60,
-    fontSize: 40,
-    marginTop: 40,
-    padding: 10,
-    textAlign: 'center',
-  },
-  textPrefix: { 
-    backgroundColor: 'transparent',
-    color: 'black',
-    height: 60,
-    fontSize: 40,
-    marginTop: 40,
-    padding: 10,
-  },
 });
