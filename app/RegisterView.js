@@ -29,7 +29,10 @@ export default class RegisterView extends Component {
       videoLoaded: false,
       opacity: new Animated.Value(0),
       cca2: 'HK',
-      country: 'Hong Kong',
+      country: {
+       name: 'Hong Kong',
+       callingCode: '852',
+      },
     }
   }
   
@@ -58,7 +61,7 @@ export default class RegisterView extends Component {
           />
           {this.state.country &&
             <Text style={ Styles.text }>
-              { this.state.country.name }
+              { this.state.country.name } (+{ this.state.country.callingCode })
             </Text>
           }
           </View>

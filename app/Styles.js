@@ -22,7 +22,7 @@ export default StyleSheet.create({
     color: 'black',
     marginTop : 10,
     marginBottom: 20,
-    fontSize : 24,
+    fontSize : 28,
   },
   textHero: { 
     backgroundColor: 'transparent',
