@@ -17,7 +17,7 @@ import {
  } from 'react-native';
 import Video from 'react-native-video';
 
-export default class Register extends Component {
+export default class RegisterView extends Component {
 
   constructor(props, context) {
     super(props, context);
