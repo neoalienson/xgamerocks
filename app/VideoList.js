@@ -1,5 +1,4 @@
-import React, { Component, 
-  PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { 
   ActivityIndicator,
   Dimensions,
@@ -15,7 +14,6 @@ var API_URL = 'https://neo.works:8445/video';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const CELL_WIDTH = (SCREEN_WIDTH - 18) / 2;
 const CELL_PADDING = 6;
-
 
 export default class VideosView extends Component {
 
@@ -67,7 +65,7 @@ export default class VideosView extends Component {
         if (responseData != undefined) {
           this.setState({
             isLoading: false,
-            dataSource: this.getDataSource(responseData.results),
+            dataSource: this.getDataSource(responseData),
           });
         }
       })
