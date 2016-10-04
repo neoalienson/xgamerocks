@@ -34,7 +34,7 @@ export default class RegisterView extends Component {
         <Video 
           repeat
           muted={ true }
-          paused={ true }
+          paused={ false }
           resizeMode="cover"
           onLoad={ () => {
             Animated.timing(this.state.opacity, {toValue: 1}).start();
