@@ -17,6 +17,7 @@ import {
  } from 'react-native';
 import Video from 'react-native-video';
 import Styles from './Styles';
+import { Button } from 'react-native-elements';
 
 export default class Verify extends Component {
 
@@ -27,6 +28,7 @@ export default class Verify extends Component {
       codeValid: false,
       videoLoaded: false,
       opacity: new Animated.Value(0),
+      isLoading: false,
     }
   }
   
@@ -49,11 +51,13 @@ export default class Verify extends Component {
           <TextInput style={ [ Styles.textInput, { flex: 1 } ]}
             keyboardType="numeric"
             placeholder="0000000"
+            editable={!this.state.isLoading}
           />
           <Text style={ Styles.textInfo } >Please enter verification code from SMS</Text>
           <Button raised backgroundColor="#397af8" icon={{ name: 'done' }} title='VERIFY' />
         </View>
         </KeyboardAvoidingView>
+        <ActivityIndicator animating={this.state.isLoading} style={[Styles.centering, {height: 80}]} size="large" />
       </Animated.View>
     );
   }

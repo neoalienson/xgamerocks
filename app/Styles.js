@@ -8,6 +8,11 @@ export default StyleSheet.create({
     bottom: 0,
     right: 0,
   },
+  centering: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 8,
+  },
   container: {
     flex: 1,
     alignItems: 'center',

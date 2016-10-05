@@ -4,6 +4,7 @@ import {
   ActivityIndicator,
   Alert,
   Animated,
+  AsyncStorage,
   Dimensions,
   Image,
   KeyboardAvoidingView,
@@ -26,14 +27,16 @@ export default class RegisterView extends Component {
     super(props, context);
     
     this.state = {
-      videoLoaded: false,
       opacity: new Animated.Value(0),
       cca2: 'HK',
       country: {
        name: 'Hong Kong',
        callingCode: '852',
       },
+      isLoading: false,
+      phone: '95881974',
     }
+    this.register = this.register.bind(this);
   }
   
   render() {
@@ -49,7 +52,7 @@ export default class RegisterView extends Component {
           } }
           style={ [ Styles.background,  ]}
           source={ require('./assets/video/lighthouse_p.mp4') } />
-        <KeyboardAvoidingView behavior="position" >
+          <KeyboardAvoidingView behavior="position" >
           <View style={ Styles.formView }>
           <Text style={ Styles.textHero } >Welcome to XGameROCKS!</Text>
           <View style={{ marginTop: 40, flexDirection: 'row'}}>
@@ -68,16 +71,47 @@ export default class RegisterView extends Component {
           <TextInput style={ [ Styles.textInput ] }
             keyboardType="numeric"
             placeholder="8888888"
+            onChangeText={(text) => this.setState({phone: text})}
+            value={this.state.phone}
+            editable={!this.state.isLoading}
           />
           <Text style={ Styles.textInfo } >Enter your phone numbers above to verify</Text>
-          <Button raised backgroundColor="#397af8" icon={{ name: 'done' }} title='VERIFY' />
+          <Button raised backgroundColor="#397af8" icon={{ name: 'done' }} title='VERIFY' onPress={this.register}  />
         </View>
         </KeyboardAvoidingView>
+        <ActivityIndicator animating={this.state.isLoading} style={[Styles.centering, {height: 80}]} size="large" />
       </Animated.View>
     );
   }
   
-}
+  register() {
+    if (this.state.isLoading) {
+      return;
+    }
+    
+    this.setState({isLoading: true});
 
-var styles = StyleSheet.create({
-});
+    var url = 'https://neo.works:8445/register?phone=' + this.state.phone + '&country_code=' + this.state.country.callingCode;
+    fetch(url, { method: 'GET', })
+    .catch((error) => {
+      Alert.alert('Registration fail');
+      this.setState({ 
+        isLoading: false,
+      });
+    })
+    .then((response) => response.json())
+    .then((res) => {
+      if (res != undefined) {
+        this.setState({ isLoading: false, });
+        if (res.success) {
+          AsyncStorage.setItem("username", res.username);
+        } else {
+          Alert.alert('Registration fail');
+        }
+      } else {
+        Alert.alert('Registration fail');
+      }
+    });
+  }
+
+}

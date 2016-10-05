@@ -48,10 +48,6 @@ export default class VideosView extends Component {
     this.setState({ isLoading: true });
     fetch(this._urlForPage(1), {
         method: 'GET',
-        headers: {
-          'X-Parse-Application-Id' : 'xgamerocks',
-          'X-Parse-REST-API-Key' : null,
-        }
       })
       .then((response) => response.json())
       .catch((error) => {
