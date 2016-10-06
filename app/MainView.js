@@ -1,11 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { 
-  ActivityIndicator,
-  Alert,
-  Animated,
-  AsyncStorage,
-  Dimensions,
-  Modal,
+   AsyncStorage,
   View,
  } from 'react-native';
 
@@ -13,9 +8,12 @@ import RegisterView from './RegisterView';
 import VerifyView from './VerifyView';
 import VideoList from './VideoList';
 import Eventx from 'react-native-simple-events';
+
+const ID = 'MainView';
   
 export default class MainView extends Component {
 
+  
   componentDidMount() {
     AsyncStorage.getItem("username").then((value) =>{
       this.setState({"username":value})
@@ -25,9 +23,14 @@ export default class MainView extends Component {
     }).done();
 
     this.onRegistered = this.onRegistered.bind(this);
-    Eventx.on('onRegistered', 'id1', this.onRegistered);
+    Eventx.on('onRegistered', ID, this.onRegistered);
     this.onVerified = this.onVerified.bind(this);
-    Eventx.on('onVerified', 'id1', this.onVerified);
+    Eventx.on('onVerified', ID, this.onVerified);
+  }
+  
+  componentWillUnmount() { 
+    Eventx.rm('onRegistered', ID) 
+    Eventx.rm('onVerified', ID) 
   }
   
   onRegistered(username) {
@@ -52,7 +55,9 @@ export default class MainView extends Component {
   
   render() {
     if (this.state.username) {
-      return (this.state.pass ? <VideoList /> : <VerifyView username={this.state.username} pass={this.state.pass} />);
+      return (this.state.pass ? 
+        <VideoList /> 
+        : <VerifyView username={this.state.username} pass={this.state.pass} />);
     }
     return (
       <RegisterView />
