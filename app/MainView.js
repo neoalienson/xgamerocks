@@ -12,18 +12,32 @@ import {
 import RegisterView from './RegisterView';
 import VerifyView from './VerifyView';
 import VideoList from './VideoList';
-import Events from 'react-native-simple-events';
+import Eventx from 'react-native-simple-events';
   
 export default class MainView extends Component {
 
   componentDidMount() {
-//    AsyncStorage.removeItem('pass');
     AsyncStorage.getItem("username").then((value) =>{
       this.setState({"username":value})
     }).done();
     AsyncStorage.getItem("pass").then((value) =>{
       this.setState({"pass":value})
     }).done();
+
+    this.onRegistered = this.onRegistered.bind(this);
+    Eventx.on('onRegistered', 'id1', this.onRegistered);
+    this.onVerified = this.onVerified.bind(this);
+    Eventx.on('onVerified', 'id1', this.onVerified);
+  }
+  
+  onRegistered(username) {
+    this.setState({ username: username });
+    AsyncStorage.setItem("username", username);
+  }
+
+  onVerified(pass) {
+    this.setState({ pass: pass });
+    AsyncStorage.setItem("pass", pass);
   }
   
   

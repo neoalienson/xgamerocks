@@ -20,6 +20,7 @@ import Video from 'react-native-video';
 import Styles from './Styles';
 import { Button } from 'react-native-elements';
 import CountryPicker from 'react-native-country-picker-modal';
+import Eventx from 'react-native-simple-events';
   
 export default class RegisterView extends Component {
 
@@ -34,7 +35,7 @@ export default class RegisterView extends Component {
        callingCode: '852',
       },
       isLoading: false,
-      phone: '95881974',
+      phone: null,
     }
     this.register = this.register.bind(this);
   }
@@ -90,7 +91,7 @@ export default class RegisterView extends Component {
     }
     
     this.setState({isLoading: true});
-
+    
     var url = 'https://neo.works:8445/register?phone=' + this.state.phone + '&country_code=' + this.state.country.callingCode;
     fetch(url, { method: 'GET', })
     .then((response) => response.json())
@@ -104,7 +105,7 @@ export default class RegisterView extends Component {
       if (res != undefined) {
         this.setState({ isLoading: false, });
         if (res.success) {
-          AsyncStorage.setItem("username", res.username);
+          Eventx.trigger('onRegistered', res.username );
         } else {
           Alert.alert('Registration fail');
         }

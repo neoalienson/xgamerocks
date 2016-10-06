@@ -102,7 +102,6 @@ app.get('/verify', function (req, res) {
         var uid = results[0].get('authy_id');
         var pass = results[0].get('pass');
         authy.verify(uid, token, function (err, result) {
-          err = null;
           if (err == null) {
             console.log('authy success');          
             res.send({ success: true, pass: pass });

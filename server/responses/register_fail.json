@@ -1,0 +1,10 @@
+{
+message: "User was not valid",
+success: false,
+errors: {
+cellphone: "is invalid",
+message: "User was not valid"
+},
+cellphone: "is invalid",
+error_code: "60027"
+}

@@ -19,7 +19,7 @@ import {
 import Video from 'react-native-video';
 import Styles from './Styles';
 import { Button } from 'react-native-elements';
-import Events from 'react-native-simple-events';
+import Eventx from 'react-native-simple-events';
 
 export default class Verify extends Component {
 
@@ -90,7 +90,7 @@ export default class Verify extends Component {
       if (res != undefined) {
         this.setState({ isLoading: false, });
         if (res.success) {
-          AsyncStorage.setItem("pass", res.pass);
+          Eventx.trigger('onVerified', res.pass)
         } else {
           Alert.alert('Verification fail');
         }

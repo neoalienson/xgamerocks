@@ -1,0 +1,7 @@
+{
+message: "User created successfully.",
+user: {
+id: 27067293
+},
+success: true
+}
