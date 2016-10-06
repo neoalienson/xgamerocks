@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react'
 import { 
   ActivityIndicator,
   Dimensions,
@@ -8,44 +8,44 @@ import {
   StyleSheet,
   Text,
   View,
- } from 'react-native';
+ } from 'react-native'
 
-var API_URL = 'https://neo.works:8445/video';
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const CELL_WIDTH = (SCREEN_WIDTH - 18) / 2;
-const CELL_PADDING = 6;
+var API_URL = 'https://neo.works:8445/video'
+const SCREEN_WIDTH = Dimensions.get('window').width
+const CELL_WIDTH = (SCREEN_WIDTH - 18) / 2
+const CELL_PADDING = 6
 
 export default class VideosView extends Component {
 
   constructor(props, context) {
-    super(props, context);
+    super(props, context)
     this.state = {
       isLoading: false,
       dataSource: new ListView.DataSource({
         rowHasChanged: (row1, row2) => row1 !== row2,
       }),
       loadError: null,
-    };
+    }
   }
   
   componentDidMount() {
-    this.loadVideos('');
+    this.loadVideos('')
   }
   
   _urlForPage(pageNumber: number): string {
     return (
       API_URL
-    );
+    )
   }
 
   loadVideos() {
-    this.loadError = null;
+    this.loadError = null
 
     if (this.props.isLoading) {
-      return;
+      return
     }
     
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true })
     fetch(this._urlForPage(1), {
         method: 'GET',
       })
@@ -55,21 +55,21 @@ export default class VideosView extends Component {
           dataSource: this.getDataSource([]),
           isLoading: false,
           loadError: error,
-        });
+        })
       })
       .then((responseData) => {
         if (responseData != undefined) {
           this.setState({
             isLoading: false,
             dataSource: this.getDataSource(responseData),
-          });
+          })
         }
       })
-      .done();
+      .done()
   }
 
   getDataSource(videos: Array<any>): ListView.DataSource {
-    return this.state.dataSource.cloneWithRows(videos);
+    return this.state.dataSource.cloneWithRows(videos)
   }
   
   _renderRow(row, sectionID: number, rowID: number) {
@@ -81,7 +81,7 @@ export default class VideosView extends Component {
             <Text style={styles.textDesc} ellipsizeMode="tail" numberOfLines={3}>{row.description}</Text>
           </View>
         </View>
-    );
+    )
   }
   
   render() {
@@ -90,7 +90,7 @@ export default class VideosView extends Component {
         <View style={[styles.container, styles.centerText]}>
           <Text>Network error</Text>
         </View>
-      );
+      )
     }
     return (this.state.dataSource.getRowCount() === 0 ?
       <View style={[styles.container, styles.centerText]}>
@@ -103,7 +103,7 @@ export default class VideosView extends Component {
         renderScrollComponent={props => <ScrollView {...props} 
           style={{ backgroundColor:"#3b5998" }} />}
       />
-    );
+    )
   }
   
 }
@@ -146,5 +146,5 @@ var styles = StyleSheet.create({
     alignItems: 'flex-start',
     backgroundColor: '#3b5998',
   },  
-});
+})
 

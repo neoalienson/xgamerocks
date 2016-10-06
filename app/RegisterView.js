@@ -1,5 +1,5 @@
 import React, { Component, 
-  PropTypes } from 'react';
+  PropTypes } from 'react'
 import { 
   ActivityIndicator,
   Alert,
@@ -15,17 +15,17 @@ import {
   TextInput,
   TouchableHighlight,
   View,
- } from 'react-native';
-import Video from 'react-native-video';
-import Styles from './Styles';
-import { Button } from 'react-native-elements';
-import CountryPicker from 'react-native-country-picker-modal';
-import Eventx from 'react-native-simple-events';
+ } from 'react-native'
+import Video from 'react-native-video'
+import Styles from './Styles'
+import { Button } from 'react-native-elements'
+import CountryPicker from 'react-native-country-picker-modal'
+import Eventx from 'react-native-simple-events'
   
 export default class RegisterView extends Component {
 
   constructor(props, context) {
-    super(props, context);
+    super(props, context)
     
     this.state = {
       opacity: new Animated.Value(0),
@@ -37,7 +37,7 @@ export default class RegisterView extends Component {
       isLoading: false,
       phone: null,
     }
-    this.register = this.register.bind(this);
+    this.register = this.register.bind(this)
   }
   
   render() {
@@ -49,7 +49,7 @@ export default class RegisterView extends Component {
           paused={ false }
           resizeMode="cover"
           onLoad={ () => {
-            Animated.timing(this.state.opacity, {toValue: 1}).start();
+            Animated.timing(this.state.opacity, {toValue: 1}).start()
           } }
           style={ [ Styles.background,  ]}
           source={ require('./assets/video/lighthouse_p.mp4') } />
@@ -82,37 +82,37 @@ export default class RegisterView extends Component {
         </KeyboardAvoidingView>
         <ActivityIndicator animating={this.state.isLoading} style={[Styles.centering, {height: 80}]} size="large" />
       </Animated.View>
-    );
+    )
   }
   
   register() {
     if (this.state.isLoading) {
-      return;
+      return
     }
     
-    this.setState({isLoading: true});
+    this.setState({isLoading: true})
     
-    var url = 'https://neo.works:8445/register?phone=' + this.state.phone + '&country_code=' + this.state.country.callingCode;
+    var url = 'https://neo.works:8445/register?phone=' + this.state.phone + '&country_code=' + this.state.country.callingCode
     fetch(url, { method: 'GET', })
     .then((response) => response.json())
     .catch((error) => {
-      Alert.alert('Registration fail', error);
+      Alert.alert('Registration fail', error)
       this.setState({
         isLoading: false,
-      });
+      })
     })
     .then((res) => {
       if (res != undefined) {
-        this.setState({ isLoading: false, });
+        this.setState({ isLoading: false, })
         if (res.success) {
-          Eventx.trigger('onRegistered', res.username );
+          Eventx.trigger('onRegistered', res.username )
         } else {
-          Alert.alert('Registration fail');
+          Alert.alert('Registration fail')
         }
       } else {
-        Alert.alert('Registration fail');
+        Alert.alert('Registration fail')
       }
-    });
+    })
   }
 
 }
