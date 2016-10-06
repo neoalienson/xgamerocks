@@ -14,11 +14,9 @@ app.get('/', function (req, res) {
   console.log(req.query);
 });
 
-sendVerificationSms = function( uid ) {
+sendVerificationSms = function(res, uid ) {
   authy.request_sms(uid, function (err) {
-    if (!err) {
-      res.send(result);
-    } else {
+    if (err) {
       res.send(err);
     }      
   });
@@ -31,14 +29,14 @@ createUser = function(uid, username, country_code, phone) {
   var user = new User();
   var current_date = (new Date()).valueOf().toString();
   var random = Math.random().toString();
-  var password = crypto.createHash('sha1').update(current_date + random).digest('hex');
+  var pass = crypto.createHash('sha1').update(current_date + random).digest('hex');
   var info = {
     username: username, 
     email: email, 
     country_code: country_code,
     phone: phone,
     authy_id: uid,
-    password: password,
+    pass: pass,
   }
   user.save(info)
     .then(function() {
@@ -57,7 +55,7 @@ app.get('/register', function (req, res) {
   var phone = req.query.phone;
   var country_code = req.query.country_code;
   var username = country_code + phone;
-  
+  console.log('register');
   authy.register_user(phone + '@neo.works', phone, country_code, function (err, result) {
     if (err) {
       console.log('user register failed: ' + phone + ', ' + country_code);
@@ -76,10 +74,10 @@ app.get('/register', function (req, res) {
           createUser(uid, username, country_code, phone);
         } else {
           uid = results[0].get('authy_id');
-          result['username'] = username;
-          res.send(result);
         }
-        sendVerificationSms(uid);
+        sendVerificationSms(res, uid);
+        result['username'] = username;
+        res.send(result);
       },
       error: function(error) {
       }
@@ -87,24 +85,38 @@ app.get('/register', function (req, res) {
   });
 });
 
-// verify token from SMS. return a password if success for future login
+// verify token from SMS. return a pass if success for future login
 app.get('/verify', function (req, res) {
   var token = req.query.token;
-  var uid = req.query.uid;
+  var username = req.query.username;
   
-  var TestObject = Parse.Object.extend("Video");
-  var testObject = new TestObject();
-  testObject.save({title: "bar"}).then(function(object) {
-    res.send({ success: true, password: ''});
+  var User = Parse.Object.extend("_User");
+  var query = new Parse.Query(User);
+  query.equalTo("username", username);
+  query.find({ 
+    success: function(results) {
+      if (results.length == 0) {
+        res.send({ success: false, message: 'user not found: ' + username });    
+        return;
+      } else {
+        var uid = results[0].get('authy_id');
+        var pass = results[0].get('pass');
+        authy.verify(uid, token, function (err, result) {
+          err = null;
+          if (err == null) {
+            console.log('authy success');          
+            res.send({ success: true, pass: pass });
+          } else {
+            res.send({success: false, message: 'authy error'});
+          }
+        });
+      }
+    }
   })
   .catch((error) => {
     res.send({ success: false, message: error.message });    
   });
-  return;
   
-  authy.verify(uid, token, function (err, result) {
-    res.send({success: (err == null)});
-  });
 });
 
 app.get('/video', function(req, res) {

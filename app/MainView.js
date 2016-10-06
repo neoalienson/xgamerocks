@@ -12,16 +12,17 @@ import {
 import RegisterView from './RegisterView';
 import VerifyView from './VerifyView';
 import VideoList from './VideoList';
-
+import Events from 'react-native-simple-events';
   
 export default class MainView extends Component {
 
   componentDidMount() {
+//    AsyncStorage.removeItem('pass');
     AsyncStorage.getItem("username").then((value) =>{
       this.setState({"username":value})
     }).done();
-    AsyncStorage.getItem("password").then((value) =>{
-      this.setState({"password":value})
+    AsyncStorage.getItem("pass").then((value) =>{
+      this.setState({"pass":value})
     }).done();
   }
   
@@ -31,13 +32,13 @@ export default class MainView extends Component {
     
     this.state = {
       username: null,
-      password: null,
+      pass: null,
     }
   }
   
   render() {
     if (this.state.username) {
-      return (this.state.password ? <MainView /> : <VerifyView />);
+      return (this.state.pass ? <VideoList /> : <VerifyView username={this.state.username} pass={this.state.pass} />);
     }
     return (
       <RegisterView />

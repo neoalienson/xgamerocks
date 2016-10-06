@@ -4,6 +4,7 @@ import {
   ActivityIndicator,
   Alert,
   Animated,
+  AsyncStorage,
   Dimensions,
   Image,
   KeyboardAvoidingView,
@@ -18,6 +19,7 @@ import {
 import Video from 'react-native-video';
 import Styles from './Styles';
 import { Button } from 'react-native-elements';
+import Events from 'react-native-simple-events';
 
 export default class Verify extends Component {
 
@@ -29,7 +31,9 @@ export default class Verify extends Component {
       videoLoaded: false,
       opacity: new Animated.Value(0),
       isLoading: false,
+      token: null,
     }
+    this.verify = this.verify.bind(this);
   }
   
   render() {
@@ -51,10 +55,12 @@ export default class Verify extends Component {
           <TextInput style={ [ Styles.textInput, { flex: 1 } ]}
             keyboardType="numeric"
             placeholder="0000000"
+            onChangeText={(text) => this.setState({token: text})}
+            value={this.state.token}
             editable={!this.state.isLoading}
           />
           <Text style={ Styles.textInfo } >Please enter verification code from SMS</Text>
-          <Button raised backgroundColor="#397af8" icon={{ name: 'done' }} title='VERIFY' />
+          <Button raised backgroundColor="#397af8" icon={{ name: 'done' }} title='VERIFY' onPress={this.verify} />
         </View>
         </KeyboardAvoidingView>
         <ActivityIndicator animating={this.state.isLoading} style={[Styles.centering, {height: 80}]} size="large" />
@@ -62,7 +68,40 @@ export default class Verify extends Component {
     );
   }
   
+  verify() {
+    if (this.state.isLoading) {
+      return;
+    }
+    
+    this.setState({isLoading: true});
+
+    AsyncStorage.getItem("username").then((username) =>{
+
+    var url = 'https://neo.works:8445/verify?username=' + username + '&token=' + this.state.token;
+    fetch(url, { method: 'GET', })
+    .catch((error) => {
+      Alert.alert('Verification fail');
+      this.setState({ 
+        isLoading: false,
+      });
+    })
+    .then((response) => response.json())
+    .then((res) => {
+      if (res != undefined) {
+        this.setState({ isLoading: false, });
+        if (res.success) {
+          AsyncStorage.setItem("pass", res.pass);
+        } else {
+          Alert.alert('Verification fail');
+        }
+      } else {
+        Alert.alert('Verification fail');
+      }
+    });
+    
+    }).done();
+
+  }
+
 }
 
-var styles = StyleSheet.create({
-});

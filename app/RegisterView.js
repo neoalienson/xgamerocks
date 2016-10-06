@@ -93,13 +93,13 @@ export default class RegisterView extends Component {
 
     var url = 'https://neo.works:8445/register?phone=' + this.state.phone + '&country_code=' + this.state.country.callingCode;
     fetch(url, { method: 'GET', })
+    .then((response) => response.json())
     .catch((error) => {
-      Alert.alert('Registration fail');
-      this.setState({ 
+      Alert.alert('Registration fail', error);
+      this.setState({
         isLoading: false,
       });
     })
-    .then((response) => response.json())
     .then((res) => {
       if (res != undefined) {
         this.setState({ isLoading: false, });
