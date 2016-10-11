@@ -66,5 +66,11 @@
 		<string>Octicons.ttf</string>
 		<string>Zocial.ttf</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Let&apos;s take video and rock</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Your will need to have audio for the video</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We will need to access video from your Photo Library</string>
 </dict>
 </plist>
