@@ -94,7 +94,7 @@ export default class VideosView extends Component {
     }
     return (this.state.dataSource.getRowCount() === 0 ?
       <View style={[styles.container, styles.centerText]}>
-        <ActivityIndicator style={{flex:1}} />
+        <ActivityIndicator style={{ flex:1 }} />
       </View> : 
       <ListView
         contentContainerStyle={styles.list}
