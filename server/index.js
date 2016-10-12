@@ -14,14 +14,6 @@ app.get('/', function (req, res) {
   console.log(req.query);
 });
 
-sendVerificationSms = function(res, uid ) {
-  authy.request_sms(uid, function (err) {
-    if (err) {
-      res.send(err);
-    }      
-  });
-}
-
 createUser = function(uid, username, country_code, phone) {
   var email = username + '@neo.works';
 
@@ -75,11 +67,23 @@ app.get('/register', function (req, res) {
         } else {
           uid = results[0].get('authy_id');
         }
-        sendVerificationSms(res, uid);
-        result['username'] = username;
-        res.send(result);
+        if (config.skipSms) {
+          console.log('skipped sms request');
+          res.send( { success: true, username: username, } )
+          return;
+        }
+        authy.request_sms(uid, function (err) {
+          if (!err) {
+             result['username'] = username;
+             res.send(result)
+          } else {
+            res.send( { success: false, message: error })
+          } 
+        });
       },
       error: function(error) {
+        console.log('failed to register');
+        res.send({ success: false, message: 'fail to query Parse object User' });
       }
     });
   });
@@ -101,6 +105,11 @@ app.get('/verify', function (req, res) {
       } else {
         var uid = results[0].get('authy_id');
         var pass = results[0].get('pass');
+        if (config.skipSms) {
+          console.log('skipped sms verification');
+          res.send({ success: true, pass: 'sms verification skipped' })
+          return;
+        }
         authy.verify(uid, token, function (err, result) {
           if (err == null) {
             console.log('authy success');          
