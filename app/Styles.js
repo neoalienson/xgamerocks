@@ -54,5 +54,23 @@ export default StyleSheet.create({
     padding: 10,
     textAlign: 'center',
   },
+  textInputSmall: { 
+    backgroundColor: 'white',
+    height: 40,
+    flex: 1,
+    fontSize: 25,
+    marginTop: 20,
+    padding: 10,
+    textAlign: 'left',
+  },
+  textInputTiny: { 
+    backgroundColor: 'white',
+    height: 30,
+    flex: 1,
+    fontSize: 16,
+    marginTop: 20,
+    padding: 5,
+    textAlign: 'left',
+  },
 
 })
