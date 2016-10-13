@@ -1,13 +1,18 @@
-var config = require('../config');
-var express = require('express');
-var app = express();
-var authy = require('authy')(config.authyApiKey);
-var crypto = require('crypto');
-var Parse = require('parse/node');
+var config = require('../config')
+var express = require('express')
+var app = express()
+var crypto = require('crypto')
+var Parse = require('parse/node')
+var verificationFactory = require('./phone_verification_authy')(config.authyApiKey)
 
 // initiate and login to parse
 Parse.initialize(config.parseAppId);
 Parse.serverURL = config.parseUrl;
+
+process.on('unhandledRejection', function(reason, p) {
+  console.log("Unhandled Rejection:", reason.stack);
+  process.exit(1);
+});
 
 app.get('/', function (req, res) {
   res.send('xgamerocks server version 1.0.0');
@@ -30,16 +35,7 @@ createUser = function(uid, username, country_code, phone) {
     authy_id: uid,
     pass: pass,
   }
-  user.save(info)
-    .then(function() {
-      console.log('user created');
-      result['username'] = username;
-      res.send(result);
-    }).catch(function(user, error) {
-      console.log('user creation failed');
-      console.log(info);
-      res.send({ success: false, message: 'failed to create user' });
-    });
+  return user.save(info);
 }
 
 // create a user on authy, and then ask authy to send a SMS verification token
@@ -48,45 +44,35 @@ app.get('/register', function (req, res) {
   var country_code = req.query.country_code;
   var username = country_code + phone;
   console.log('register');
-  authy.register_user(phone + '@neo.works', phone, country_code, function (err, result) {
-    if (err) {
-      console.log('user register failed: ' + phone + ', ' + country_code);
-      res.send(result);
-      return;
-    } 
-    
-    // save the user info into parse
+  
+  verificationFactory.register(phone + '@neo.works', phone, country_code)
+  .then( () => { 
+    console.log('try to locate user: ' + username);
     var User = Parse.Object.extend("_User");
     var query = new Parse.Query(User);
     query.equalTo("username", username);
-    query.find({ 
-      success: function(results) {
-        var uid = result.user.id;
-        if (results.length == 0) {
-          createUser(uid, username, country_code, phone);
-        } else {
-          uid = results[0].get('authy_id');
-        }
-        if (config.skipSms) {
-          console.log('skipped sms request');
-          res.send( { success: true, username: username, } )
-          return;
-        }
-        authy.request_sms(uid, function (err) {
-          if (!err) {
-             result['username'] = username;
-             res.send(result)
-          } else {
-            res.send( { success: false, message: error })
-          } 
-        });
-      },
-      error: function(error) {
-        console.log('failed to register');
-        res.send({ success: false, message: 'fail to query Parse object User' });
-      }
-    });
-  });
+    return query.find();
+  })
+  .catch( (error) => { console.log(error)
+    res.send({ success: false, message: error }) })
+  .then( (results) => {
+    if (results.length == 0) {
+      return createUser(uid, username, country_code, phone);
+    }
+    
+    uid = results[0].get('authy_id');
+
+    if (config.skipSms) {
+      console.log('skipped sms request');
+      res.send( { success: true, username: username, } )
+      return ;
+    }
+    
+    return verificationFactory.requestAuthToken(uid)
+  })
+  .catch( (error) => {
+      res.send({ success: false, message: 'fail to query Parse object User: ' + error });
+  })
 });
 
 // verify token from SMS. return a pass if success for future login
@@ -110,14 +96,10 @@ app.get('/verify', function (req, res) {
           res.send({ success: true, pass: 'sms verification skipped' })
           return;
         }
-        authy.verify(uid, token, function (err, result) {
-          if (err == null) {
-            console.log('authy success');          
-            res.send({ success: true, pass: pass });
-          } else {
-            res.send({success: false, message: 'authy error'});
-          }
-        });
+
+        authFactory.verify(uid, token)
+        .then( () => { res.send({ success: true, pass: pass }) } )
+        .catch( (error) => { res.send({ success: false, message: 'verify error' }) });
       }
     }
   })
